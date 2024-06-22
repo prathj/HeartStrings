@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Calendar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Mood Calendar</h1>
+    <div id="calendar">
+        {% for entry in mood_entries %}
+        <div class="day">
+            <p>{{ entry.date }}</p>
+            <p>Emotion: {{ entry.emotion }}</p>
+            <p>Journal: {{ entry.journal_entry }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

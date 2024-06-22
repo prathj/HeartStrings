@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Entry</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Journal Entry</h1>
+    <form method="POST">
+        <label for="entry">Write your thoughts:</label>
+        <textarea id="entry" name="entry" rows="4" cols="50"></textarea>
+        <input type="hidden" name="lang" value="en">
+        <button type="submit">Submit</button>
+    </form>
+    {% if emotion %}
+    <h2>Detected Emotion: {{ emotion }}</h2>
+    <h3>Recommended Playlist/Podcast:</h3>
+    <ul>
+        {% for item in recommendations %}
+        <li><a href="{{ item.url }}" target="_blank">{{ item.name }} by {{ item.artist }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

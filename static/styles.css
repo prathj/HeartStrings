@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    padding: 20px;
+}
+h1 {
+    color: #333;
+}
+nav {
+    margin-bottom: 20px;
+}
+nav a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #4CAF50;
+}
+nav a:hover {
+    text-decoration: underline;
+}
+form {
+    margin-bottom: 20px;
+}
+textarea, input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+}
+#calendar .day {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #e0f7fa;
+    margin-bottom: 10px;
+}
