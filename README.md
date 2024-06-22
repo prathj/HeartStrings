@@ -1,1 +1,1 @@
-# PsychSync
+# HeartStrings
