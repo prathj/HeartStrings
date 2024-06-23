@@ -1,14 +1,15 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 import asyncio
-import websockets
 import json
 from datetime import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from googletrans import Translator
 import logging
 import secrets
+import random
+#from hume import HumeStreamClient
+#from hume.models.config import LanguageConfig
 
 app = Flask(__name__)
 
@@ -30,12 +31,10 @@ SPOTIPY_CLIENT_SECRET = '735bba397f424b49b387b56d264e7ed9'
 # Configure Spotipy
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
 
-translator = Translator()
-
 # Define MoodEntry model with user_id
 class MoodEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.String, nullable=False)
     date = db.Column(db.Date, nullable=False)
     emotion = db.Column(db.String, nullable=False)
     journal_entry = db.Column(db.String, nullable=False)
@@ -44,31 +43,44 @@ class MoodEntry(db.Model):
 with app.app_context():
     db.create_all()
 
-async def get_hume_response(text, lang='en'):
-    uri = f"wss://api.hume.ai/v0/evi/chat?api_key={HUME_API_KEY}"
+# Load prompts from a text file
+def load_prompts(filename='prompts.txt'):
+    with open(filename, 'r') as file:
+        prompts = file.readlines()
+    return [prompt.strip() for prompt in prompts]
+
+# Select a random prompt
+def get_random_prompt():
+    prompts = load_prompts()
+    return random.choice(prompts)
+
+# Generate a unique user ID
+def generate_user_id():
+    return secrets.token_hex(8)
+
+async def get_hume_response(text):
+    client = HumeStreamClient(HUME_API_KEY)
+    config = LanguageConfig()
     try:
-        async with websockets.connect(uri) as websocket:
-            await websocket.send(json.dumps({'text': text}))
-            response = await websocket.recv()
-            response_data = json.loads(response)
-            emotion = response_data.get('emotion', 'neutral')
-            if lang != 'en':
-                emotion = translator.translate(emotion, dest=lang).text
-            return emotion
+        async with client.connect([config]) as socket:
+            result = await socket.send_text(text)
+            emotions = result["language"]["predictions"][0]["emotions"]
+            detected_emotions = [emotion['name'] for emotion in emotions]
+            return detected_emotions
     except Exception as e:
         logging.error(f"Error in get_hume_response: {e}")
-        return 'neutral'
+        return ['neutral']
 
 def get_spotify_recommendations(emotion):
-    genre = 'pop'  # Default genre
-    if 'happy' in emotion.lower():
-        genre = 'happy'
-    elif 'sad' in emotion.lower():
-        genre = 'sad'
-    elif 'angry' in emotion.lower():
-        genre = 'metal'
-    elif 'calm' in emotion.lower():
-        genre = 'chill'
+    genre_mapping = {
+        'happy': 'happy',
+        'sad': 'sad',
+        'angry': 'metal',
+        'calm': 'chill',
+        'neutral': 'pop'
+    }
+    
+    genre = genre_mapping.get(emotion.lower(), 'pop')
     
     try:
         results = sp.recommendations(seed_genres=[genre], limit=10)
@@ -85,14 +97,20 @@ def index():
 
 @app.route('/journal', methods=['GET', 'POST'])
 def journal():
+    prompt = get_random_prompt()
+    
     if request.method == 'POST':
         entry = request.form['entry']
         lang = request.form.get('lang', 'en')
-        user_id = request.form.get('user_id')  # Ensure user_id is provided in the form
+        
+        # Get user ID from cookie or generate a new one
+        user_id = request.cookies.get('user_id')
         if not user_id:
-            return "User ID is required", 400
+            user_id = generate_user_id()
+
         try:
-            emotion = asyncio.run(get_hume_response(entry, lang))
+            detected_emotion = asyncio.run(get_hume_response(entry))
+            emotion = detected_emotion[0] if detected_emotion else 'neutral'
             recommendations = get_spotify_recommendations(emotion)
             
             # Save the mood entry in the database
@@ -100,11 +118,15 @@ def journal():
             db.session.add(mood_entry)
             db.session.commit()
 
-            return render_template('journal.html', emotion=emotion, recommendations=recommendations, entry=entry)
+            # Set the user_id cookie in the response
+            response = make_response(render_template('journal.html', emotion=emotion, recommendations=recommendations, entry=entry, prompt=prompt))
+            response.set_cookie('user_id', user_id)
+            return response
         except Exception as e:
             logging.error(f"Error in /journal route: {e}")
             return "There was an error processing your request.", 500
-    return render_template('journal.html')
+
+    return render_template('journal.html', prompt=prompt)
 
 @app.route('/calendar')
 def calendar():
