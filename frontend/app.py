@@ -55,33 +55,71 @@ async def get_hume_response(text):
             print('34')
             result = await socket.send_text(text)
             max_emotion = (max(result['language']['predictions'][-1]['emotions'], key=lambda x: x['score']))['name']
-            print(max_emotion)
-            print(type(max_emotion))
-            available_genres = sp.recommendation_genre_seeds()
-            # Print the available genres
-            # print("genres and their emotions:")
-            # print(available_genres['genres'])
-            # emotions = result["language"]["predictions"][0]["emotions"]
-            # print("56")
-            # detected_emotions = [emotion['name'] for emotion in emotions][0]
-            # print("78")
-            # return detected_emotions
             return max_emotion
     except Exception as e:
         logging.error(f"Error in get_hume_response: {e}")
         return ['neutral']
 
 def get_spotify_recommendations(emotion):
-    genre = 'pop'  # Default genre
-    if 'happy' in emotion.lower():
-        genre = 'happy'
-    elif 'sad' in emotion.lower():
-        genre = 'sad'
-    elif 'angry' in emotion.lower():
-        genre = 'metal'
-    elif 'calm' in emotion.lower():
-        genre = 'chill'
-    
+
+    emotion_genres = {
+        'Admiration': 'classical',
+        'Adoration': 'romance',
+        'Aesthetic Appreciation': 'ambient',
+        'Amusement': 'comedy',
+        'Anger': 'metal',
+        'Annoyance': 'punk',
+        'Anxiety': 'ambient',
+        'Awe': 'classical',
+        'Awkwardness': 'emo',
+        'Boredom': 'ambient',
+        'Calmness': 'acoustic',
+        'Concentration': 'study',
+        'Confusion': 'experimental',
+        'Contemplation': 'ambient',
+        'Contempt': 'punk',
+        'Contentment': 'chill',
+        'Craving': 'dance',
+        'Determination': 'rock',
+        'Disappointment': 'blues',
+        'Disapproval': 'punk',
+        'Disgust': 'death-metal',
+        'Distress': 'emo',
+        'Doubt': 'indie',
+        'Ecstasy': 'edm',
+        'Embarrassment': 'comedy',
+        'Empathic Pain': 'gospel',
+        'Enthusiasm': 'dance',
+        'Entrancement': 'trance',
+        'Envy': 'hip-hop',
+        'Excitement': 'pop',
+        'Fear': 'industrial',
+        'Gratitude': 'gospel',
+        'Guilt': 'blues',
+        'Horror': 'black-metal',
+        'Interest': 'indie',
+        'Joy': 'pop',
+        'Love': 'romance',
+        'Nostalgia': 'retro',
+        'Pain': 'emo',
+        'Pride': 'rock',
+        'Realization': 'ambient',
+        'Relief': 'acoustic',
+        'Romance': 'romance',
+        'Sadness': 'sad',
+        'Sarcasm': 'punk',
+        'Satisfaction': 'soul',
+        'Desire': 'latin',
+        'Shame': 'emo',
+        'Surprise (negative)': 'experimental',
+        'Surprise (positive)': 'pop',
+        'Sympathy': 'folk',
+        'Tiredness': 'sleep',
+        'Triumph': 'power-pop'
+    }
+
+    genre = emotion_genres[emotion]
+
     try:
         results = sp.recommendations(seed_genres=[genre], limit=10)
         tracks = results['tracks']
