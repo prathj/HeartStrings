@@ -4,23 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heartstrings</title>
+    <br>
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
     <style>
         body {
             background-color: #f7e9f4; /* Very light background */
-            font-family: Garamond, Serif;
+            /*font-family: Garamond, Serif;*/
+            font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+            font-weight: normal;
+            font-size: 20px;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             color: #333; /* Dark text color */
             display: flex;
-            align-items: center;
+            /*align-items: center;*/
             justify-content: center;
-            height: 100vh;
+            /*height: 100vh;*/
         }
         .container {
             text-align: center;
             padding: 40px;
-            background-color: #fff;
+            background-color: #fdfdfdb9;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -85,15 +89,36 @@
         .image img:hover {
             transform: scale(1.05); /* Slight zoom on hover */
         }
+
+        .mini-container {
+            background-color: #f7e9f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .mini-container a {
+            display: block;
+            margin: 10px 0;
+            font-size: 18px;
+            color: #4a0072;
+            text-decoration: none;
+        }
+        .mini-container a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="menu">
+            <br>
             <a href="index.html">Home</a>
-            <a href="#">Journal</a>
-            <a href="#">Calendar</a>
-            <a href="#">Discover</a>
+            <a href="journal.html">Journal</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="dashboard.html">Discover</a>
         </div>
         <div class="title">Heartstrings</div>
         <div class="subtitle">[hahrt-stringz]</div>
@@ -110,9 +135,11 @@
         <div class="features">
             Allow yourself to:
             <ul>
-                <li><b>Journal.</b></li>
-                <li><b>Track.</b></li>
-                <li><b>Explore music.</b></li>
+                <div class="mini-container">
+                <li><b><a href="journal.html"><p style="color:black;">Journal and get music recommendations.</p></a></b></li>
+                <li><b><a href="calendar.html"><p style="color:black;">Visualize your days.</p></a></b></li>
+                <li><b><a href="dashboard.html"><p style="color:black;">Track your moods.</p></a></b></li>
+                </div>
             </ul>
         </div>
     </div>
