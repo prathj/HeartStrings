@@ -9,13 +9,28 @@
 <body>
     <h1>Mood Calendar</h1>
     <div id="calendar">
-        {% for entry in mood_entries %}
-        <div class="day">
-            <p>{{ entry.date }}</p>
-            <p>Emotion: {{ entry.emotion }}</p>
-            <p>Journal: {{ entry.journal_entry }}</p>
-        </div>
-        {% endfor %}
+        {% if mood_entries %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Emotion</th>
+                        <th>Journal Entry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in mood_entries %}
+                    <tr>
+                        <td>{{ entry.date }}</td>
+                        <td>{{ entry.emotion }}</td>
+                        <td>{{ entry.journal_entry }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No mood entries found. Start journaling to track your moods!</p>
+        {% endif %}
     </div>
 </body>
 </html>
