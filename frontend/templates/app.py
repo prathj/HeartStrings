@@ -11,6 +11,10 @@ from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+import asyncio
+from hume import HumeStreamClient
+from hume.models.config import LanguageConfig
+
 app = Flask(__name__)
 
 # Hume AI and Spotify API credentials
