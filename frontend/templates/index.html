@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emotion-Based Music Recommendation and Mood Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>HeartStrings - Home</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='dashboard.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1>Emotion-Based Music Recommendation and Mood Tracker</h1>
-    <nav>
-        <a href="/journal">Journal Entry</a> | <a href="/calendar">Mood Calendar</a>
-    </nav>
+    <header>
+        <h1>Welcome to HeartStrings</h1>
+        <p>Your personal mood tracker and music recommendation app</p>
+    </header>
+    <div class="container">
+        <div class="text-center mt-4">
+            <a href="/journal" class="btn btn-primary">Start Journal</a>
+            <a href="/calendar" class="btn btn-secondary">View Calendar</a>
+        </div>
+    </div>
 </body>
 </html>
