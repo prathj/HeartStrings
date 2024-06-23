@@ -8,9 +8,12 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from googletrans import Translator
 import logging
+import secrets
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+
+# Generate and set the secret key
+app.secret_key = secrets.token_hex(16)
 
 # Configure the SQLite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mood_tracker.db'
@@ -29,9 +32,10 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLI
 
 translator = Translator()
 
-# Define MoodEntry model without user_id
+# Define MoodEntry model with user_id
 class MoodEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
     date = db.Column(db.Date, nullable=False)
     emotion = db.Column(db.String, nullable=False)
     journal_entry = db.Column(db.String, nullable=False)
@@ -84,12 +88,15 @@ def journal():
     if request.method == 'POST':
         entry = request.form['entry']
         lang = request.form.get('lang', 'en')
+        user_id = request.form.get('user_id')  # Ensure user_id is provided in the form
+        if not user_id:
+            return "User ID is required", 400
         try:
             emotion = asyncio.run(get_hume_response(entry, lang))
             recommendations = get_spotify_recommendations(emotion)
             
             # Save the mood entry in the database
-            mood_entry = MoodEntry(date=datetime.today().date(), emotion=emotion, journal_entry=entry)
+            mood_entry = MoodEntry(user_id=user_id, date=datetime.today().date(), emotion=emotion, journal_entry=entry)
             db.session.add(mood_entry)
             db.session.commit()
 
