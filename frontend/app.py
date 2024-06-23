@@ -6,9 +6,13 @@ import json
 from datetime import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from googletrans import Translator
 import logging
 import secrets
+import certifi
+import ssl
+import pprint as pprint
+from hume import HumeStreamClient
+from hume.models.config import LanguageConfig
 
 app = Flask(__name__)
 
@@ -30,8 +34,6 @@ SPOTIPY_CLIENT_SECRET = '735bba397f424b49b387b56d264e7ed9'
 # Configure Spotipy
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
 
-translator = Translator()
-
 # Define MoodEntry model with user_id
 class MoodEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,20 +46,30 @@ class MoodEntry(db.Model):
 with app.app_context():
     db.create_all()
 
-async def get_hume_response(text, lang='en'):
-    uri = f"wss://api.hume.ai/v0/evi/chat?api_key={HUME_API_KEY}"
+async def get_hume_response(text):
+    client = HumeStreamClient(HUME_API_KEY)
+    config = LanguageConfig()
     try:
-        async with websockets.connect(uri) as websocket:
-            await websocket.send(json.dumps({'text': text}))
-            response = await websocket.recv()
-            response_data = json.loads(response)
-            emotion = response_data.get('emotion', 'neutral')
-            if lang != 'en':
-                emotion = translator.translate(emotion, dest=lang).text
-            return emotion
+        print("12")
+        async with client.connect([config]) as socket:
+            print('34')
+            result = await socket.send_text(text)
+            max_emotion = (max(result['language']['predictions'][-1]['emotions'], key=lambda x: x['score']))['name']
+            print(max_emotion)
+            print(type(max_emotion))
+            available_genres = sp.recommendation_genre_seeds()
+            # Print the available genres
+            # print("genres and their emotions:")
+            # print(available_genres['genres'])
+            # emotions = result["language"]["predictions"][0]["emotions"]
+            # print("56")
+            # detected_emotions = [emotion['name'] for emotion in emotions][0]
+            # print("78")
+            # return detected_emotions
+            return max_emotion
     except Exception as e:
         logging.error(f"Error in get_hume_response: {e}")
-        return 'neutral'
+        return ['neutral']
 
 def get_spotify_recommendations(emotion):
     genre = 'pop'  # Default genre
@@ -87,12 +99,11 @@ def index():
 def journal():
     if request.method == 'POST':
         entry = request.form['entry']
-        lang = request.form.get('lang', 'en')
         user_id = request.form.get('user_id')  # Ensure user_id is provided in the form
         if not user_id:
             return "User ID is required", 400
         try:
-            emotion = asyncio.run(get_hume_response(entry, lang))
+            emotion = asyncio.run(get_hume_response(entry))
             recommendations = get_spotify_recommendations(emotion)
             
             # Save the mood entry in the database
