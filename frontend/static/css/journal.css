@@ -1,20 +1,20 @@
-/* journal.css */
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;700&family=Roboto:wght@400;500&display=swap');
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #e3f2fd;
+    background-color: #fff0f3; /* Soft pink background */
     margin: 0;
     padding: 0;
 }
 
 header {
-    background-color: #42a5f5;
+    background-color: #ffccd5; /* Light pink for a soft contrast */
     color: white;
     padding: 20px 0;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 2em;
+    font-family: 'Lora', serif;
 }
 
 .container {
@@ -29,11 +29,22 @@ header {
 h1, h3, h4 {
     text-align: center;
     color: #333;
+    font-family: 'Lora', serif;
+    font-size: 1.75em;
+}
+
+.prompt {
+    font-size: 1.25rem;
+    color: #555;
+    margin-bottom: 20px;
+    font-family: 'Lora', serif;
 }
 
 .form-group label {
     color: #555;
     font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.25em;
 }
 
 .form-control {
@@ -43,16 +54,17 @@ h1, h3, h4 {
 }
 
 .btn-primary {
-    background-color: #42a5f5;
-    border-color: #42a5f5;
-    font-size: 16px;
+    background-color: #ffccd5;
+    border-color: #ffccd5;
+    font-size: 1.25em;
     padding: 10px 20px;
     border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
 }
 
 .btn-primary:hover {
-    background-color: #1e88e5;
-    border-color: #1e88e5;
+    background-color: #ffb3ba;
+    border-color: #ffb3ba;
 }
 
 .list-group-item {
@@ -61,13 +73,13 @@ h1, h3, h4 {
 }
 
 .list-group-item a {
-    color: #42a5f5;
+    color: #ff99a1;
     font-weight: 500;
     text-decoration: none;
 }
 
 .list-group-item a:hover {
-    color: #1e88e5;
+    color: #ff6670;
     text-decoration: underline;
 }
 
