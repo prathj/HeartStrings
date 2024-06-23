@@ -8,8 +8,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import logging
 import secrets
 import random
-from hume import HumeStreamClient
-from hume.models.config import LanguageConfig
+#from hume import HumeStreamClient
+#from hume.models.config import LanguageConfig
 
 app = Flask(__name__)
 
