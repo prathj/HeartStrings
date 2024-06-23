@@ -8,33 +8,21 @@
     <link href="{{ url_for('static', filename='css/journal.css') }}" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Journal Entry</h1>
-    </header>
     <div class="container">
+        <div class="mt-4">
+            <p>{{ prompt }}</p>
+        </div>
         <form method="post" class="mt-4">
             <div class="form-group">
-                <label for="user_id">User ID</label>
-                <input type="text" class="form-control" id="user_id" name="user_id" required>
-            </div>
-            <div class="form-group">
-                <label for="entry">Journal Entry</label>
                 <textarea class="form-control" id="entry" name="entry" rows="4" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="lang">Language</label>
-                <select class="form-control" id="lang" name="lang">
-                    <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <!-- Add more language options as needed -->
-                </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
         {% if emotion %}
             <div class="mt-5">
                 <h3>Detected Emotion: {{ emotion }}</h3>
-                <h4>Music Recommendations</h4>
+                <h4>Recommended Genre: {{ genre }}</h4>
+                <h5>Music Recommendations</h5>
                 <ul class="list-group">
                     {% for recommendation in recommendations %}
                         <li class="list-group-item">

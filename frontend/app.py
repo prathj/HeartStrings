@@ -1,18 +1,16 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import asyncio
-import websockets
 import json
 from datetime import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import logging
 import secrets
-import certifi
-import ssl
-import pprint as pprint
+import uuid
 from hume import HumeStreamClient
 from hume.models.config import LanguageConfig
+import random
 
 app = Flask(__name__)
 
@@ -37,7 +35,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLI
 # Define MoodEntry model with user_id
 class MoodEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.String, nullable=False)
     date = db.Column(db.Date, nullable=False)
     emotion = db.Column(db.String, nullable=False)
     journal_entry = db.Column(db.String, nullable=False)
@@ -50,18 +48,15 @@ async def get_hume_response(text):
     client = HumeStreamClient(HUME_API_KEY)
     config = LanguageConfig()
     try:
-        print("12")
         async with client.connect([config]) as socket:
-            print('34')
             result = await socket.send_text(text)
             max_emotion = (max(result['language']['predictions'][-1]['emotions'], key=lambda x: x['score']))['name']
             return max_emotion
     except Exception as e:
         logging.error(f"Error in get_hume_response: {e}")
-        return ['neutral']
+        return 'neutral'
 
 def get_spotify_recommendations(emotion):
-
     emotion_genres = {
         'Admiration': 'classical',
         'Adoration': 'romance',
@@ -118,16 +113,25 @@ def get_spotify_recommendations(emotion):
         'Triumph': 'power-pop'
     }
 
-    genre = emotion_genres[emotion]
+    genre = emotion_genres.get(emotion, 'pop')
 
     try:
         results = sp.recommendations(seed_genres=[genre], limit=10)
         tracks = results['tracks']
         recommendations = [{'name': track['name'], 'artist': track['artists'][0]['name'], 'url': track['external_urls']['spotify']} for track in tracks]
-        return recommendations
+        return genre, recommendations
     except Exception as e:
         logging.error(f"Error in get_spotify_recommendations: {e}")
         return []
+
+def get_random_prompt():
+    try:
+        with open('prompts.txt', 'r') as file:
+            prompts = file.readlines()
+            return random.choice(prompts).strip()
+    except Exception as e:
+        logging.error(f"Error reading prompts.txt: {e}")
+        return "Write about anything that's on your mind."
 
 @app.route('/')
 def index():
@@ -135,25 +139,25 @@ def index():
 
 @app.route('/journal', methods=['GET', 'POST'])
 def journal():
+    prompt = get_random_prompt()
     if request.method == 'POST':
         entry = request.form['entry']
-        user_id = request.form.get('user_id')  # Ensure user_id is provided in the form
-        if not user_id:
-            return "User ID is required", 400
+        user_id = str(uuid.uuid4())  # Generate a unique user ID
+        
         try:
             emotion = asyncio.run(get_hume_response(entry))
-            recommendations = get_spotify_recommendations(emotion)
+            genre, recommendations = get_spotify_recommendations(emotion)
             
             # Save the mood entry in the database
             mood_entry = MoodEntry(user_id=user_id, date=datetime.today().date(), emotion=emotion, journal_entry=entry)
             db.session.add(mood_entry)
             db.session.commit()
 
-            return render_template('journal.html', emotion=emotion, recommendations=recommendations, entry=entry)
+            return render_template('journal.html', emotion=emotion, genre=genre, recommendations=recommendations, entry=entry, prompt=prompt)
         except Exception as e:
             logging.error(f"Error in /journal route: {e}")
             return "There was an error processing your request.", 500
-    return render_template('journal.html')
+    return render_template('journal.html', prompt=prompt)
 
 @app.route('/calendar')
 def calendar():

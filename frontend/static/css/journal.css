@@ -1,0 +1,77 @@
+/* Set the background color to a very light background */
+body {
+    background-color: #f7e9f4; /* Very light background */
+    font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+    font-weight: normal;
+    font-size: 20px;
+    margin: 0;
+    padding: 20px;
+    color: #333; /* Dark text color */
+    display: flex;
+    justify-content: center;
+}
+
+
+
+/* Style the container */
+.container {
+    text-align: center;
+    padding: 40px;
+    background-color: #fdfdfdb9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Style the prompt text */
+p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Style the form elements */
+form {
+    background-color: #FFE4E1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #D9534F;
+}
+
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #D9534F;
+}
+
+.btn-primary {
+    background-color: #D9534F;
+    border-color: #D9534F;
+}
+
+.btn-primary:hover {
+    background-color: #C9302C;
+    border-color: #AC2925;
+}
+
+/* Style the emotion and recommendations section */
+.mt-5 h3, .mt-5 h4 {
+    color: #D9534F;
+}
+
+.list-group-item {
+    background-color: #FFF5F5;
+    border: 1px solid #FFCCCC;
+}
+
+.list-group-item a {
+    color: #C9302C;
+}
+
+.list-group-item a:hover {
+    text-decoration: underline;
+}
