@@ -3,34 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood Calendar</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>HeartStrings - Calendar</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1>Mood Calendar</h1>
-    <div id="calendar">
-        {% if mood_entries %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Emotion</th>
-                        <th>Journal Entry</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in mood_entries %}
+    <header>
+        <h1>Mood Calendar</h1>
+    </header>
+    <div class="container">
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Emotion</th>
+                    <th>Journal Entry</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in mood_entries %}
                     <tr>
                         <td>{{ entry.date }}</td>
                         <td>{{ entry.emotion }}</td>
                         <td>{{ entry.journal_entry }}</td>
                     </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No mood entries found. Start journaling to track your moods!</p>
-        {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

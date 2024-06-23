@@ -3,32 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journal Entry</title>
+    <title>HeartStrings - Journal</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/journal.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1>Journal Entry</h1>
-    <form action="{{ url_for('journal') }}" method="post">
-        <label for="user_id">User ID:</label>
-        <input type="text" id="user_id" name="user_id" required><br><br>
-        <label for="entry">Journal Entry:</label><br>
-        <textarea id="entry" name="entry" rows="4" cols="50" required></textarea><br><br>
-        <label for="lang">Language:</label>
-        <select id="lang" name="lang">
-            <option value="en">English</option>
-            <option value="es">Spanish</option>
-            <!-- Add more languages as needed -->
-        </select><br><br>
-        <input type="submit" value="Submit">
-    </form>
-
-    {% if emotion %}
-        <h2>Detected Emotion: {{ emotion }}</h2>
-        <h2>Spotify Recommendations:</h2>
-        <ul>
-            {% for recommendation in recommendations %}
-                <li><a href="{{ recommendation.url }}">{{ recommendation.name }} by {{ recommendation.artist }}</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <header>
+        <h1>Journal Entry</h1>
+    </header>
+    <div class="container">
+        <form method="post" class="mt-4">
+            <div class="form-group">
+                <label for="user_id">User ID</label>
+                <input type="text" class="form-control" id="user_id" name="user_id" required>
+            </div>
+            <div class="form-group">
+                <label for="entry">Journal Entry</label>
+                <textarea class="form-control" id="entry" name="entry" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="lang">Language</label>
+                <select class="form-control" id="lang" name="lang">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <!-- Add more language options as needed -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {% if emotion %}
+            <div class="mt-5">
+                <h3>Detected Emotion: {{ emotion }}</h3>
+                <h4>Music Recommendations</h4>
+                <ul class="list-group">
+                    {% for recommendation in recommendations %}
+                        <li class="list-group-item">
+                            <a href="{{ recommendation.url }}" target="_blank">{{ recommendation.name }} by {{ recommendation.artist }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
