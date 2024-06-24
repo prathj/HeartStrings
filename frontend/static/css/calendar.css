@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f8ff;
+    background-color: #ffcccb; /* Light pink background */
     padding: 20px;
 }
 h1 {
@@ -26,6 +26,7 @@ textarea, input[type="text"], input[type="email"], input[type="password"] {
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
+    background-color: #fff; /* Ensuring input fields have a white background for better readability */
 }
 button {
     background-color: #4CAF50;
@@ -63,6 +64,6 @@ button:hover {
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
-    background-color: #e0f7fa;
+    background-color: #ffe4e1; /* Light pinkish background for consistency */
     margin-bottom: 10px;
 }

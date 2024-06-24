@@ -11,8 +11,6 @@ body {
     justify-content: center;
 }
 
-
-
 /* Style the container */
 .container {
     text-align: center;
@@ -74,4 +72,66 @@ form {
 
 .list-group-item a:hover {
     text-decoration: underline;
+}
+
+/* Additional styles for other elements in your application */
+h1 {
+    color: #333;
+}
+nav {
+    margin-bottom: 20px;
+}
+nav a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #4CAF50;
+}
+nav a:hover {
+    text-decoration: underline;
+}
+textarea, input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #D9534F;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+button {
+    background-color: #D9534F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #C9302C;
+}
+#calendar {
+    margin-top: 20px;
+}
+#calendar table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#calendar th, #calendar td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+#calendar th {
+    background-color: #f2f2f2;
+}
+#calendar tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+#calendar tr:hover {
+    background-color: #e0f7fa;
+}
+#calendar .day {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ffe4e1;
+    margin-bottom: 10px;
 }
